@@ -5,7 +5,7 @@
 - `python3 -m venv ./venv`
 - `. ./venv/bin/activate`
 - `pip3 install -r requirements.txt`
-- `uvicorn app.app:app --reload`
+- `uvicorn app:app --reload`
 
 #### `now you can open http://localhost:8000 in your browser` for http connection
 

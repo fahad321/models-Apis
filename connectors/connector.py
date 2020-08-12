@@ -20,6 +20,9 @@ def convert_image_to_numpy_array(image):
 def seal_intactness_connector(image):
     im = convert_image_to_numpy_array(image)
     results = seal_intactness(im)
+    for r in results:
+        r["found"] = True
+        r["model"] = "model1"
     ##for now we are choosing the first result only
     if len(results):
         return results[0]
