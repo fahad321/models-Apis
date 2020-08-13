@@ -28,7 +28,7 @@ notifier = Notifier()
 
 @app.get("/")
 def root():
-    return jsonable_encoder({"🪴": "🪴"})
+    return jsonable_encoder({"☃️": "⛄"})
 
 
 @app.post("/seal_intactness")
@@ -44,17 +44,18 @@ async def seal_intactness(file: bytes = File("file")):
 @app.post("/container_health")
 async def seal_intactness(file: bytes = File("file")):
     res = container_health_connector(file)
-    res = jsonable_encoder(res)
-    await notifier.push(res)
-    return jsonable_encoder(
+    res = jsonable_encoder(
         {"ratio": res["ratio"], "confidence": res["confidence"], "img": "img"}
     )
+    await notifier.push(res)
+    return res
 
 
 # TODO
 @app.post("/container_number")
 async def seal_intactness(file: bytes = File("file")):
     res = container_number_connector(file)
+    await notifier.push(res)
     return jsonable_encoder(res)
 
 
@@ -63,13 +64,15 @@ async def seal_intactness(file: bytes = File("file")):
     res = alpr_connector(file)
     res = jsonable_encoder(res)
     await notifier.push(res)
-    return
+    return res
 
 
 @app.post("/hazardour_sign_detector")
 async def seal_intactness(file: bytes = File("file")):
     res = hazardour_detection_connector(file)
-    return jsonable_encoder({"maybe": "working"})
+    res = jsonable_encoder(res)
+    await notifier.push(res)
+    return res
 
 
 @app.websocket("/ws")
