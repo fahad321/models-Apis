@@ -36,6 +36,7 @@ async def seal_intactness(file: bytes = File("file")):
     time = datetime.datetime.utcnow()
     res = seal_intactness_connector(file)
     res["time"] = time
+    res["model"] = "model1"
     res = jsonable_encoder(res)
     await notifier.push(res)
     return res
@@ -45,7 +46,12 @@ async def seal_intactness(file: bytes = File("file")):
 async def seal_intactness(file: bytes = File("file")):
     res = container_health_connector(file)
     res = jsonable_encoder(
-        {"ratio": res["ratio"], "confidence": res["confidence"], "img": "img"}
+        {
+            "ratio": res["ratio"],
+            "confidence": res["confidence"],
+            "img": "img",
+            "model": "model2",
+        }
     )
     await notifier.push(res)
     return res
@@ -55,13 +61,16 @@ async def seal_intactness(file: bytes = File("file")):
 @app.post("/container_number")
 async def seal_intactness(file: bytes = File("file")):
     res = container_number_connector(file)
+    res["model"] = "model3"
+    res = jsonable_encoder(res)
     await notifier.push(res)
-    return jsonable_encoder(res)
+    return res
 
 
 @app.post("/alpr")
 async def seal_intactness(file: bytes = File("file")):
     res = alpr_connector(file)
+    res["model"] = "model4"
     res = jsonable_encoder(res)
     await notifier.push(res)
     return res
@@ -70,6 +79,7 @@ async def seal_intactness(file: bytes = File("file")):
 @app.post("/hazardour_sign_detector")
 async def seal_intactness(file: bytes = File("file")):
     res = hazardour_detection_connector(file)
+    res["model"] = "model5"
     res = jsonable_encoder(res)
     await notifier.push(res)
     return res
