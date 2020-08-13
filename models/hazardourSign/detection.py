@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def extract_features(img):
-    fast = cv2.xfeatures2d.SURF_create(500)
+    fast = cv2.ORB_create(500)
     kp, des = fast.detectAndCompute(img, None)
     img2 = cv2.drawKeypoints(img, kp, None)
     return kp, des
@@ -25,23 +25,19 @@ def extract_features_dataset(images, extract_features_function):
 
 
 def match_features(des1, des2):
-    FLANN_INDEX_KDTREE = 1
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)  # or pass empty dictionary
-
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-
-    match = flann.knnMatch(des1, des2, k=2)
     ### END CODE HERE ###
 
-    return match
+    bf = cv2.BFMatcher()
+    matches = bf.knnMatch(des1, des2, k=2)
+    # matches = sorted(matches, key = lambda x:x.distance)
+    return matches
 
 
 # Optional
 def filter_matches_distance(match, dist_threshold):
     filtered_match = []
     ### START CODE HERE ###
-    for i, (m, n) in enumerate(match):
+    for m, n in match:
         if m.distance < n.distance * dist_threshold:
             filtered_match.append(m)
 
@@ -88,7 +84,7 @@ def match_features_dataset(des_list, match_features):
 
 
 def run_detections(img, threshold=100):
-    samples = glob("unique/*")
+    samples = glob("./models/hazardourSign/unique/*")
     sample_images = []
     res = {}
     test_kp, test_des = extract_features(img)
@@ -100,12 +96,7 @@ def run_detections(img, threshold=100):
         match = match_features(test_des, sample_des)
         filtered_match = filter_matches_distance(match, 0.7)
 
-        print(len(filtered_match), img, jj)
         fil_mats[jj] = len(filtered_match)
-        cv2.imshow("i", img)
-        cv2.imshow("j", j)
-        cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     arr = [i[0] for i in fil_mats]
 
