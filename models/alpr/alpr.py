@@ -49,10 +49,7 @@ def alpr(ima):
             x, y, w, h = cv2.boundingRect(c)  # This will find out co-ord for plate
             new_img = gray[y : y + h, x : x + w]  # Create new image
             cv2.imwrite(
-                "/home/nin/aiotize/newFastapi/models/alpr/CroppedImagesText/"
-                + "temp"
-                + ".png",
-                new_img,
+                "models/alpr/CroppedImagesText/" + "temp" + ".png", new_img,
             )  # Store new image
             idx += 1
 
@@ -62,9 +59,7 @@ def alpr(ima):
     # print(NumberPlateCnt)
     cv2.drawContours(image, [NumberPlateCnt], -1, (0, 255, 0), 3)
 
-    Cropped_img_loc = (
-        "/home/nin/aiotize/newFastapi/models/alpr/CroppedImagesText/temp.png"
-    )
+    Cropped_img_loc = "models/alpr/CroppedImagesText/temp.png"
     # Use tesseract to covert image into string
     text = pytesseract.image_to_string(Cropped_img_loc, lang="eng")
     return {"number": text}
